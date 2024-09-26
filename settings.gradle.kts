@@ -19,6 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "UsingPublicAPI"
+rootProject.name = "MyRecipeApp"
 include(":app")
- 

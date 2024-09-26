@@ -1,14 +1,14 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.kotlin.android)
 }
 
 android {
-    namespace = "com.gerardo_fdez.usingpublicapi"
+    namespace = "edu.uvg.myrecipeapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.gerardo_fdez.usingpublicapi"
+        applicationId = "edu.uvg.myrecipeapp"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -50,6 +50,18 @@ android {
 }
 
 dependencies {
+
+    //Compose ViewMode
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+
+    //Network calls
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+
+    //json to Kotlin object mapping
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //Image loading
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
