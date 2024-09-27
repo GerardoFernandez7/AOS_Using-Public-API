@@ -1,4 +1,4 @@
-package edu.uvg.myrecipeapp.ui.theme
+package com.gerardo_fdez.usingpublicapi.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

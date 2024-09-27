@@ -1,4 +1,4 @@
-package edu.uvg.myrecipeapp
+package com.gerardo_fdez.usingpublicapi
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -13,7 +13,7 @@ private val retrofit = Retrofit.Builder().baseUrl("https://www.themealdb.com/api
 
 interface ApiService{
     @GET("categories.php")
-    suspend fun getCategories():CategoriesResponse
+    suspend fun getCategories(): CategoriesResponse
 
     @GET("filter.php")
     suspend fun getMeals(@Query("c") category: String): MealsResponse

@@ -1,4 +1,4 @@
-package edu.uvg.myrecipeapp
+package com.gerardo_fdez.usingpublicapi
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -71,6 +70,7 @@ fun CategoryItem(category: Category, navController: NavController){
             , modifier = Modifier
                 .fillMaxSize()
                 .aspectRatio(1f)
+                .clip(RoundedCornerShape(16.dp))
                 .clickable {
                     navController.navigate("meal/${category.strCategory}")
                 }

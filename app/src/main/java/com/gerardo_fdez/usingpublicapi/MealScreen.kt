@@ -1,4 +1,4 @@
-package edu.uvg.myrecipeapp
+package com.gerardo_fdez.usingpublicapi
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -72,6 +72,7 @@ fun MealItem(meal: Meal, navController: NavController){
             , modifier = Modifier
                 .fillMaxSize()
                 .aspectRatio(1f)
+                .clip(RoundedCornerShape(16.dp))
                 .clickable {
                     navController.navigate("recipe/${meal.idMeal}")
                 }

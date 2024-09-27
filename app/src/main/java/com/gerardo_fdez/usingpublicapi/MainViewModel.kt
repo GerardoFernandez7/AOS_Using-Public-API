@@ -1,4 +1,4 @@
-package edu.uvg.myrecipeapp
+package com.gerardo_fdez.usingpublicapi
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf

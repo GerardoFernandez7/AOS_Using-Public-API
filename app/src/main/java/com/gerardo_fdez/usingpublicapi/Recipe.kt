@@ -1,4 +1,4 @@
-package edu.uvg.myrecipeapp
+package com.gerardo_fdez.usingpublicapi
 
 data class RecipesResponse(
     val meals: List<MealRecipe>?
