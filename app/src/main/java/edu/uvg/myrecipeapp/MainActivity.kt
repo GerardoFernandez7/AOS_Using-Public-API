@@ -1,5 +1,6 @@
 package edu.uvg.myrecipeapp
 
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,16 +9,32 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import edu.uvg.myrecipeapp.ui.theme.MyRecipeAppTheme
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import edu.uvg.myrecipeapp.ui.theme.API_RecipeTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MyRecipeAppTheme {
+            API_RecipeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    RecipeScreen(modifier = Modifier.padding(innerPadding))
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "category") {
+                        composable(route = "category") {
+                            CategoryScreen(modifier = Modifier.padding(innerPadding), navController)
+                        }
+                        composable(route = "meal/{categoryName}") { backStackEntry ->
+                            val categoryName = backStackEntry.arguments?.getString("categoryName")
+                            MealScreen(categoryName = categoryName, navController = navController)
+                        }
+                        composable(route = "recipe/{idMeal}") { backStackEntry ->
+                            val idMeal = backStackEntry.arguments?.getString("idMeal")
+                            RecipeScreen(idMeal = idMeal)
+                        }
+                    }
                 }
             }
         }
