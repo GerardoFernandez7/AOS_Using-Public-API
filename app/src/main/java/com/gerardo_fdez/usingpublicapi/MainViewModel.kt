@@ -9,6 +9,7 @@ import android.util.Log
 
 
 class MainViewModel: ViewModel() {
+
     // Categories
     private val _categorieState = mutableStateOf(CategoryState())
     val categoriesState: State<CategoryState> = _categorieState
