@@ -1,47 +1,47 @@
 package com.gerardo_fdez.usingpublicapi
 
+import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import android.util.Log
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 
-class MainViewModel: ViewModel() {
+//Misma Logica que en MealViewModel
 
-    // Categories
-    private val _categorieState = mutableStateOf(CategoryState())
-    val categoriesState: State<CategoryState> = _categorieState
+class MainViewModel(
+    val dao: Any,
+    val apiService: ApiService,
+    val context: Context
+): ViewModel() {
+    // Variables para categories
+    private val _categoriesState = MutableStateFlow(CategoryState())
+    val categoriesState: StateFlow<CategoryState> = _categoriesState.asStateFlow()
 
-    // Meals
-    private val _mealState = mutableStateOf(MealState())
-    val mealsState: State<MealState> = _mealState
 
-    // Recipes
-    private val _recipeState = mutableStateOf(RecipeState())
-    val recipesState: State<RecipeState> = _recipeState
+
+
+    private val categoryRepository = OfflineCategoryRepository(dao, apiService, context)
 
     init {
         fetchCategories()
     }
 
-    private fun fetchCategories(){
+    fun fetchCategories() {
         viewModelScope.launch {
-            try{
-                val response = recipeService.getCategories()
-                _categorieState.value = _categorieState.value.copy(
-                    list = response.categories
-                    , loading = false
-                    , error = null
-                )
-            }catch (e: Exception){
-                _categorieState.value = _categorieState.value.copy(
-                    loading = false
-                    , error = "Error fetching Categories ${e.message}"
+            categoryRepository.getCategories().collect { categories ->
+                _categoriesState.value = _categoriesState.value.copy(
+                    list = categories,
+                    loading = false,
+                    error = null
                 )
             }
-        } //End of viewModelScope
+        }
     }
 
     data class CategoryState(
@@ -50,63 +50,5 @@ class MainViewModel: ViewModel() {
         , val error: String? = null
     )
 
-    private fun fetchMeals(category: String){
-        viewModelScope.launch {
-            try{
-                val response = recipeService.getMeals(category)
-                _mealState.value = _mealState.value.copy(
-                    list = response.meals,
-                    loading = false,
-                    error = null
-                )
-            } catch (e: Exception){
-                _mealState.value = _mealState.value.copy(
-                    loading = false
-                    , error = "Error fetching Meals ${e.message}"
-                )
-            }
-        }
-    }
 
-    fun onCategoryClick(category: String) {
-        fetchMeals(category)
-    }
-
-    data class MealState(
-        val loading: Boolean = true
-        , val list: List<Meal> = emptyList()
-        , val error: String? = null
-    )
-
-    private fun fetchRecipes(idMeal: String) {
-        viewModelScope.launch {
-            try {
-                val response = recipeService.getRecipes(idMeal) // Usa idMeal en vez de "52772"
-                Log.i("IDMEAL*************", response.toString())
-
-                val meals = response.meals ?: emptyList() // Maneja el caso de null
-
-                _recipeState.value = _recipeState.value.copy(
-                    list = meals,
-                    loading = false,
-                    error = null
-                )
-            } catch (e: Exception) {
-                _recipeState.value = _recipeState.value.copy(
-                    loading = false,
-                    error = "Error fetching Meals: ${e.message}"
-                )
-            }
-        }
-    }
-
-    fun onRecipeClick(idMeal: String) {
-        fetchRecipes(idMeal)
-    }
-
-    data class RecipeState(
-        val loading: Boolean = true,
-        val list: List<MealRecipe> = emptyList(),
-        val error: String? = null
-    )
 }

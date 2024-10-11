@@ -1,18 +1,19 @@
 package com.gerardo_fdez.usingpublicapi
 
+
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
+
+// @Dao indica que esta interfaz contiene métodos de acceso a la base de datos
 
 @Dao
 interface MealDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertMeals(meal: MealEntity) // Asegúrate de usar MealEntity
+    suspend fun insertMeal(categories: List<Meal>)
 
-    @Query("SELECT * FROM meals")
-    suspend fun getAllMeals(): List<MealEntity>
-
-    @Query("SELECT * FROM meals WHERE idMeal = :id")
-    suspend fun getMealById(id: String): MealEntity?
+    @Query("SELECT * FROM Meal WHERE category = :category")
+    fun getAllMeals(category: String): Flow<List<Meal>>
 }

@@ -7,11 +7,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import android.content.Context
 
-@Database(entities = [CategoryEntity::class, MealEntity::class, MealRecipeEntity::class], version = 2, exportSchema = false)
+@Database(entities = [Category::class, Meal::class,MealRecipe::class ], version = 8)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
-    abstract fun mealDao():MealDao
-    abstract fun mealrecipeDao(): MealRecipeDao
+    abstract fun mealDao(): MealDao
+    abstract fun recipeDao(): RecipeDao
 
     companion object {
         @Volatile

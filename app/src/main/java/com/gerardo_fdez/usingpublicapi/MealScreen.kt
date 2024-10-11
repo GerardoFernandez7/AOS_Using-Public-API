@@ -10,28 +10,41 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 
+
 @Composable
 fun MealScreen(categoryName: String?, modifier: Modifier = Modifier, navController: NavController) {
-    val mealViewModel: MainViewModel = viewModel()
+    val context = LocalContext.current
+    val mealDao: MealDao = AppDatabase.getDatabase(context).mealDao()
+    val apiService = recipeService
+
+    val mealViewModel: MealViewModel = viewModel(
+        factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val nonNullCategoryName = categoryName ?: "Default Category"
+                return MealViewModel(mealDao, apiService, context, nonNullCategoryName) as T
+            }
+        }
+    )
 
     if (categoryName != null) {
-        mealViewModel.onCategoryClick(categoryName)
+        mealViewModel.fetchMeals(categoryName)
     }
 
     val viewstate by mealViewModel.mealsState
@@ -51,11 +64,12 @@ fun MealScreen(categoryName: String?, modifier: Modifier = Modifier, navControll
     }
 }
 
+
 @Composable
 fun MealScreen(meals: List<Meal>, navController: NavController){ //List<Recipe>
     LazyVerticalGrid(GridCells.Fixed(2), modifier = Modifier.fillMaxSize()) {
         items(meals){
-            meal -> MealItem(meal = meal, navController)
+                meal -> MealItem(meal = meal, navController)
         }
     }
 }
@@ -72,7 +86,6 @@ fun MealItem(meal: Meal, navController: NavController){
             , modifier = Modifier
                 .fillMaxSize()
                 .aspectRatio(1f)
-                .clip(RoundedCornerShape(16.dp))
                 .clickable {
                     navController.navigate("recipe/${meal.idMeal}")
                 }
